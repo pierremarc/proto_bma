@@ -14,9 +14,9 @@ class Error404(Response):
         self.status = 404
         
 class JSONResponse(Response):
-    def __init__(self):
+    def __init__(self, origin):
         super(JSONResponse, self).__init__()
-        self.headerlist = [('Content-type', 'application/json')]
+        self.headerlist = [('Content-type', 'application/json'), ('Access-Control-Allow-Origin', origin)]
         
 class Handler(object):
     def __init__(self, bridge):
@@ -27,10 +27,11 @@ class Handler(object):
         response.body = data
         
     def rect(self, req, response):
-        data = self.bridge.find_in_rect(req.params.get('N'),
-                                        req.params.get('E'),
-                                        req.params.get('S'),
-                                        req.params.get('W'))
+        data = self.bridge.find_in_rect(float(req.params.get('N')),
+                                        float(req.params.get('E')),
+                                        float(req.params.get('S')),
+                                        float(req.params.get('W')),
+                                        int(req.params.get('srid')))
         response.body = data
         
     def pos(self, req, response):
@@ -54,7 +55,7 @@ class ServiceApp(object):
         method_name = self.components[0]
         try:
             method = getattr(self.handler, method_name)
-            self.response = JSONResponse()
+            self.response = JSONResponse(req.headers['Origin'])
             method(req, self.response)
             return self.response(environ, start_response)
         except Exception, e:

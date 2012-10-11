@@ -46,14 +46,16 @@ class PGBMABridge(object):
         res = self.cursor.fetchone()
         return res[0]
         
-    def find_in_rect(self, N, E, S, W):
-        c0 = '%f %f'%(N,W)
-        c1 = '%f %f'%(N,E)
-        c2 = '%f %f'%(S,E)
-        c3 = '%f %f'%(S,W)
-        polygon = 'POLYGON(('+ ','.join([c0,c1,c2,c3]) +'))'
-        st_polygon = "ST_GeomFromText('" + polygon + "')"
-        self.cursor.execute('SELECT id WHERE ST_Contains(%s, %s)'%(st_polygon, self.geometry_col))
+    def find_in_rect(self, N, E, S, W, srid):
+        c0 = '%f %f'%(W,N)
+        c1 = '%f %f'%(E,N)
+        c2 = '%f %f'%(E,S)
+        c3 = '%f %f'%(W,S)
+        polygon = 'POLYGON(('+ ','.join([c0,c1,c2,c3,c0]) +'))'
+        st_polygon = "ST_GeomFromText('" + polygon + "', "+ str(srid) +")"
+        query = 'SELECT id FROM %s WHERE ST_Contains(ST_Transform(%s,ST_SRID(%s)), %s)'%(self.layer, st_polygon, self.geometry_col, self.geometry_col)
+        print('[RECT] %s'%query)
+        self.cursor.execute(query)
         ret = []
         for row in self.cursor.fetchall():
             ret.append(row[0])
