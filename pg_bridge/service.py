@@ -1,7 +1,8 @@
 """
 pgbridge web service
 """
-
+import traceback
+import sys
 
 from webob import Request, Response
 import pgbridge
@@ -24,6 +25,18 @@ class Handler(object):
     def all(self, req, response):
         data = self.bridge.get_all()
         response.body = data
+        
+    def rect(self, req, response):
+        data = self.bridge.find_in_rect(req.params.get('N'),
+                                        req.params.get('E'),
+                                        req.params.get('S'),
+                                        req.params.get('W'))
+        response.body = data
+        
+    def pos(self, req, response):
+        comps = req.path[1:].split('/')
+        id = comps[1]
+        response.body = self.bridge.get_pos(id)
 
 class ServiceApp(object):
     def __init__(self):
@@ -45,5 +58,10 @@ class ServiceApp(object):
             method(req, self.response)
             return self.response(environ, start_response)
         except Exception, e:
+            etype, value, tb = sys.exc_info()
+            print('%s : %s'%(etype.__name__, value))
+            tb_fmt = traceback.format_tb(tb)
+            for t in tb_fmt:
+                print(t)
             return Error404()(environ, start_response)
         

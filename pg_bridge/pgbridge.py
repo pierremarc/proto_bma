@@ -41,7 +41,10 @@ class PGBMABridge(object):
         return json.dumps(ret)
             
     def get_pos(self, id):
-        pass
+        query = 'SELECT ST_AsGeoJSON(ST_Centroid(the_geom)) FROM '+self.layer+ ' WHERE pid=%s'
+        self.cursor.execute(query,(id,))
+        res = self.cursor.fetchone()
+        return res[0]
         
     def find_in_rect(self, N, E, S, W):
         c0 = '%f %f'%(N,W)
