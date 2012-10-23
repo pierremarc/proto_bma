@@ -74,7 +74,7 @@ class PGBMABridge(object):
         
     def at_pos(self, lng, lat, srid=4326):
         #st_point = "ST_PointFromText('POINT(%f %f)', %s)"%(lng,lat,srid)
-        st_point = "ST_PointFromText('POINT({lng:.14f} {lat:.14f})', {srid})".format(lng=lng, lat=lat, srid=srid)
+        st_point = "ST_PointFromText('POINT({lng:.16f} {lat:.16f})', {srid})".format(lng=lng, lat=lat, srid=srid)
         #query = 'SELECT pid FROM %s WHERE ST_Contains(%s, ST_Transform(%s,ST_SRID(%s)))'%(self.layer, self.geometry_col, st_point, self.geometry_col)
         query = 'SELECT pid FROM {layer} WHERE ST_Contains({geom}, ST_Transform({point},ST_SRID({geom})))'.format(layer=self.layer,geom=self.geometry_col,point=st_point)   
         print('[at_pos] %f %f %d => %s'%(lng, lat, srid, query))
