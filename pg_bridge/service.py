@@ -13,6 +13,15 @@ class Error404(Response):
         super(Error404, self).__init__()
         self.status = 404
         
+def get_components_from_request(req):
+    path = req.path[1:]
+    components = path.split('/')
+    ret = []
+    for cpm in components:
+        if cpm:
+            ret.append(cpm)
+    return ret
+        
 class JSONResponse(Response):
     def __init__(self, origin):
         super(JSONResponse, self).__init__()
@@ -35,7 +44,7 @@ class Handler(object):
         response.body = data
         
     def pos(self, req, response):
-        comps = req.path[1:].split('/')
+        comps = get_components_from_request(req)
         id = comps[1]
         response.body = self.bridge.get_pos(id)
 
@@ -49,13 +58,8 @@ class ServiceApp(object):
         
     def __call__(self, environ, start_response):
         req = Request(environ)
-        path = req.path[1:]
-        print('[REQUESTED PATH] %s => %s'%(req.path,path.split('/')))
-        components = path.split('/')
-        self.components = []
-        for cpm in components:
-            if cpm:
-                self.components.append(cpm)
+        self.components = get_components_from_request(req)
+        print('[REQUESTED PATH] %s => %s'%(req.path,self.components))
         
         method_name = self.components[0]
         try:
