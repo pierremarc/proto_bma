@@ -54,7 +54,7 @@ class PGBMABridge(object):
         polygon = 'POLYGON(('+ ','.join([c0,c1,c2,c3,c0]) +'))'
         st_polygon = "ST_GeomFromText('" + polygon + "', "+ str(srid) +")"
         query = 'SELECT id FROM %s WHERE ST_Contains(ST_Transform(%s,ST_SRID(%s)), %s)'%(self.layer, st_polygon, self.geometry_col, self.geometry_col)
-        print('[RECT] %s'%query)
+        #print('[RECT] %s'%query)
         self.cursor.execute(query)
         ret = []
         for row in self.cursor.fetchall():
