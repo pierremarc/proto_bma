@@ -51,7 +51,12 @@ class ServiceApp(object):
         req = Request(environ)
         path = req.path[1:]
         print('[REQUESTED PATH] %s => %s'%(req.path,path.split('/')))
-        self.components = path.split('/')
+        components = path.split('/')
+        self.components = []
+        for cpm in components:
+            if cpm:
+                self.components.append(cpm)
+        
         method_name = self.components[0]
         try:
             method = getattr(self.handler, method_name)
