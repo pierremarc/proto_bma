@@ -40,9 +40,9 @@ class PGBMABridge(object):
             ret.append(dr)
         return json.dumps(ret)
             
-    def get_pos(self, id):
-        query = 'SELECT ST_AsGeoJSON(ST_Centroid(the_geom)) FROM '+self.layer+ ' WHERE pid=%s'
-        self.cursor.execute(query,(id,))
+    def get_pos(self, id, srid=4326):
+        query = 'SELECT ST_AsGeoJSON(ST_Transform(ST_Centroid(the_geom), %s)) FROM '+self.layer+ ' WHERE pid=%s'
+        self.cursor.execute(query,(srid,id))
         res = self.cursor.fetchone()
         return res[0]
         
