@@ -73,8 +73,9 @@ class PGBMABridge(object):
         return json.dumps(ret)
         
     def at_pos(self, lng, lat, srid=4326):
-        st_point = "ST_PointFromText('POINT(%f %f)', %s)"%(lat,lng,srid)
+        st_point = "ST_PointFromText('POINT(%f %f)', %s)"%(lng,lat,srid)
         query = 'SELECT pid FROM %s WHERE ST_Contains(%s, ST_Transform(%s,ST_SRID(%s)))'%(self.layer, self.geometry_col, st_point, self.geometry_col)
+        print('[at_pos] %f %f %d => %s'%(lng, lat, srid, query))
         self.exec_query(query)
         res = self.cursor.fetchone()
         return json.dumps(res)
