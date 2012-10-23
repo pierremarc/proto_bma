@@ -27,10 +27,21 @@ class PGBMABridge(object):
                 self.geometry_col = r[0]
             else:
                 self.cnames.append(r[0])
+    
+    def exec_query(self, query, args=None):
+        try:
+            if args:
+                self.cursor.execute(query, args)
+            else:
+                self.cursor.execute(query)
+        except Exception:
+            self.conn.rollback()
+        else:
+            self.conn.commit()
         
     def get_all(self):
         query = ' '.join(['SELECT',','.join(self.cnames),'FROM',self.layer,';'])
-        self.cursor.execute(query)
+        self.exec_query(query)
         rows = self.cursor.fetchall()
         ret = []
         for row in rows:
@@ -42,7 +53,7 @@ class PGBMABridge(object):
             
     def get_pos(self, id, srid=4326):
         query = 'SELECT ST_AsGeoJSON(ST_Transform(ST_Centroid(the_geom), %s)) FROM '+self.layer+ ' WHERE pid=%s'
-        self.cursor.execute(query,(srid,id))
+        self.exec_query(query,(srid,id))
         res = self.cursor.fetchone()
         return res[0]
         
@@ -55,7 +66,7 @@ class PGBMABridge(object):
         st_polygon = "ST_GeomFromText('" + polygon + "', "+ str(srid) +")"
         query = 'SELECT pid FROM %s WHERE ST_Contains(ST_Transform(%s,ST_SRID(%s)), %s)'%(self.layer, st_polygon, self.geometry_col, self.geometry_col)
         #print('[RECT] %s'%query)
-        self.cursor.execute(query)
+        self.exec_query(query)
         ret = []
         for row in self.cursor.fetchall():
             ret.append(row[0])
