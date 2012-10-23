@@ -71,7 +71,13 @@ class PGBMABridge(object):
         for row in self.cursor.fetchall():
             ret.append(row[0])
         return json.dumps(ret)
-            
+        
+    def at_pos(self, lng, lat, srid=4326):
+        st_point = "ST_PointFromText('POINT(%f %f)', %s)"%(lat,lng,srid)
+        query = 'SELECT pid FROM %s WHERE ST_Contains(%s, ST_Transform(%s,ST_SRID(%s)))'%(self.layer, self.geometry_col, st_point, self.geometry_col)
+        self.exec_query(query)
+        res = self.cursor.fetchone()
+        return json.dumps(res)
         
         
         

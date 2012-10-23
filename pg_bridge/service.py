@@ -47,6 +47,12 @@ class Handler(object):
         comps = get_components_from_request(req)
         id = comps[1]
         response.body = self.bridge.get_pos(id)
+        
+    def feature(self, req, response):
+        data = self.bridge.at_pos(float(req.params.get('lng')), 
+                                    float(req.params.get('lat')), 
+                                    int(req.params.get('srid')))
+        response.body = data
 
 class ServiceApp(object):
     def __init__(self):
