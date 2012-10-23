@@ -64,7 +64,10 @@ class ServiceApp(object):
         method_name = self.components[0]
         try:
             method = getattr(self.handler, method_name)
-            self.response = JSONResponse(req.headers['Origin'])
+            origin = '*'
+            if req.headers.has_key('Origin'):
+                origin = req.headers['Origin']
+            self.response = JSONResponse(origin)
             method(req, self.response)
             return self.response(environ, start_response)
         except Exception, e:
