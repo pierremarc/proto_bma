@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>bMa - Maître architecte pour Bruxelles</title>
+<script type="text/javascript" src="./index_files/jquery-1.5.1.min.js"></script>
+<script src="leaflet-src.js"></script>
+<script src="../lib/bma_gis.js"></script>
+<script type="text/javascript">
+    
+var WMS_URL = 'http://bmawms.specgis.be/service';
+var WMS_LAYER = 'bMa';
+var PG_URL = 'http://specgis.be:8001/';
+// var PG_URL = 'http://localhost:8001/';
+var MAP_TITLE = 'Map Title';
+    
+$(document).ready(function(){
+
+    BG.init(WMS_URL, PG_URL, WMS_LAYER, MAP_TITLE);
+    BG.install_map('map_container', function(data){
+            if(data.length > 0)
+            {
+                BG.get_pos(data[0], 'map_container', function(gdata){
+                        var mk = $('#marker');
+                        var mapo = $('#map_container').offset();
+                        mk.offset({
+                            top:mapo.top + gdata.ctnr_point.y - 5,
+                            left:mapo.left + gdata.ctnr_point.x - 5
+                        });
+                        console.log(gdata);
+                    });
+            }
+        });
+        
+    var pos = $('#pos');
+    BG.get_map().on('mousemove', function(evt){
+       pos.html('lat: '+evt.latlng.lat+'<br /> lng: '+evt.latlng.lng); 
+    });
+
+});
+</script>
+<link rel="stylesheet" href="leaflet.css" />
+<style type="text/css">
+#map_container{
+	position: relative; 
+	height:797px; 
+}
+
+.marker{
+    position:absolute;
+    width:10px;
+    height:10px;
+    border:1px solid red;
+}
+
+#marker2{
+    border:1px solid blue;
+}
+
+#pos{
+    position:absolute;
+    top:10px;
+    right:10px;
+    height:38px;
+    width:256px;
+    border: 2px solid black;
+    background-color:white;
+}
+
+</style>
+<body>
+<div id="map_container"></div>
+<div id="marker" class="marker"></div>
+<div id="marker2" class="marker"></div>
+<div id="pos"></div>
+</body>
+</html>
