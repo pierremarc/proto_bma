@@ -44,10 +44,12 @@ class PGBMABridge(object):
         self.exec_query(query)
         rows = self.cursor.fetchall()
         ret = []
+        geomidx = len(self.cnames)
         for row in rows:
             dr = {}
             for c in range(len(self.cnames)):
                 dr[self.cnames[c]] = row[c]
+            dr['geom'] = dr[geomidx]
             ret.append(dr)
         return json.dumps(ret)
             
