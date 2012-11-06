@@ -32,7 +32,7 @@ class Handler(object):
         self.bridge = bridge
         
     def all(self, req, response):
-        data = self.bridge.get_all()
+        data = self.bridge.get_all(int(req.params.get('srid')))
         response.body = data
         
     def rect(self, req, response):

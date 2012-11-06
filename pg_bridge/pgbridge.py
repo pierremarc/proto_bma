@@ -39,8 +39,8 @@ class PGBMABridge(object):
         else:
             self.conn.commit()
         
-    def get_all(self):
-        query = ' '.join(['SELECT',','.join(self.cnames),'FROM',self.layer,';'])
+    def get_all(self, srid=4326):
+        query = ' '.join(['SELECT',','.join(self.cnames),', ST_AsText(ST_Transform(the_geom, \'%s\')) as geom'%(srid,),'FROM',self.layer,';'])
         self.exec_query(query)
         rows = self.cursor.fetchall()
         ret = []
