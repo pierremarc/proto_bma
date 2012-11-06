@@ -49,7 +49,7 @@ class PGBMABridge(object):
             dr = {}
             for c in range(len(self.cnames)):
                 dr[self.cnames[c]] = row[c]
-            dr['geom'] = dr[geomidx]
+            dr['geom'] = row[geomidx]
             ret.append(dr)
         return json.dumps(ret)
             
