@@ -1,0 +1,92 @@
+/* debug */
+#map{background:blue;}
+#debug{position:fixed; top:0; left:0; background:#ccc; width:200px; font-size:6px; }
+#console{background:yellow;}
+/* vars */
+@saumon:#FFE3DE;
+@hred:#ec4941;
+@red:#EC4941;
+@blue:#78AEDE;
+@yellow:#FAF39F;
+@green:#B1CB92;
+@fontH:Helvetica, Arial;
+@topH:40px;
+@consoleW:200px;
+/* reset */
+*, p, div, ul, li, h1, h2, h3, h4, h5, h6{padding:0; margin:0;}
+body{font-family:Helvetica, Arial; text-align:left; margin:0px 0 10px;}
+a, .link{cursor:pointer;}
+/* basics */
+.break{height:0; border:none; width:0; clear:both; margin:0; padding:0; font-size:0; line-height:0;}
+.mRight{margin-right:20px;}
+.mLeft{margin-left:20px;}
+.mTop{margin-top:20px;}
+.mBottom{margin-bottom:20px;}
+.mHor{margin-right:20px; margin-left:20px;}
+.mVer{margin-top:20px; margin-bottom:20px;}
+.mAll{margin:20px;}
+/* basic class */
+.break, .cBoth{clear:both;}
+.cLeft{clear:left;}
+.cRight{clear:right;}
+.cNone{clear:none;}
+.fLeft{float:left;}
+.fRight{float:right;}
+.fNone{float:none;}
+/* position and dimensions */
+body{margin:0 10px 10px; width:100%; height:100%;}
+#container{width:100%; height:100%; position:relative;}
+#container>*{position:absolute; top:0; }
+#top{width:100%; height:@topH; left:0;}
+#content{width:35%; min-width:400px; left:40px; top:40px;}
+#map{width:100%; height:100%; left:0;}
+#console{top:@topH; right:0px; width:@consoleW; position:absolute;}
+/* z-index */
+#top{z-index:100;}
+#content{z-index:80;}
+#console{z-index:70;}
+#map{z-index:50;}
+/* elements */
+#top {
+	font-size:11px; letter-spacing:0.05em;
+	ul{ list-style:none; 
+		li{
+			height:@topH;
+			background:white;
+			float:left;
+			position:relative;
+			padding:0px 10px;
+			a{text-transform:uppercase; position:relative; top:15px;}
+			ul{
+				display:none;
+				position:absolute;
+				top:@topH;
+				left:0;
+				text-align:center;
+				li{padding:0; margin-bottom:2px; float:none; height:auto;}
+				a{text-transform:none; position:static;
+					&:hover{color:@hred;}
+				}
+			}
+			&:hover{background:transparent;
+				ul{background:white; display:block;}
+				}
+			&:first-child{
+				a{top:5px;}
+			}
+			&:last-child{float:right; text-align:right;
+				a{text-transform:none; color:#ccc;}
+				&:hover{background:white;}
+			}
+		}
+	}
+	a{color:#000; padding:2px 4px 1px; text-decoration:none;}
+}
+
+
+div.console_item{
+    position:absolute;
+    width:100%;
+    min-height:3px;
+    border:1px solid red;
+}
