@@ -46,7 +46,7 @@ class Handler(object):
     def pos(self, req, response):
         comps = get_components_from_request(req)
         id = comps[1]
-        response.body = self.bridge.get_pos(id)
+        response.body = self.bridge.get_pos(id, int(req.params.get('srid')))
         
     def feature(self, req, response):
         data = self.bridge.at_pos(float(req.params.get('lng')), 
