@@ -40,7 +40,7 @@ class PGBMABridge(object):
             self.conn.commit()
         
     def get_all(self, srid=4326, geo_json=False):
-        query = ' '.join(['SELECT',','.join(self.cnames),', ST_AsText(ST_Transform(the_geom, \'%s\')) as geom'%(srid,),'FROM',self.layer,';'])
+        query = ' '.join(['SELECT',','.join(self.cnames),', ST_AsBinary(ST_Transform(the_geom, \'%s\')) as geom'%(srid,),'FROM',self.layer,';'])
         self.exec_query(query)
         rows = self.cursor.fetchall()
         ret = []
