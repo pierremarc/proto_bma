@@ -139,6 +139,8 @@ function InitMap()
                 }
             }
         });
+        
+        BG.install_features();
     });
 
                 
