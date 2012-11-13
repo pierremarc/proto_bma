@@ -70,10 +70,7 @@ function InitMap()
 {
     var WMS_URL = 'http://bmawms.specgis.be/service';
     var WMS_LAYER = 'bMa';
-//     var WMS_URL = 'http://specgis.be:8000';
-//     var WMS_LAYER = '__all__';
     var PG_URL = 'http://specgis.be:8001/';
-    // var PG_URL = 'http://localhost:8001/';
     var MAP_TITLE = 'Map Title';
     var bmabru_json_url = 'http://www.bmabru.be/Public/json/';
     BG.init(WMS_URL, PG_URL, WMS_LAYER, MAP_TITLE);
@@ -99,6 +96,8 @@ function InitMap()
             elem.elem.show();
             elem.elem.animate({top:elem_y + 'px'});
         };
+        
+       
         
         BG.install_map('map', function(data){
             $('.console_item').hide();

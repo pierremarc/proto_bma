@@ -32,7 +32,7 @@ class Handler(object):
         self.bridge = bridge
         
     def all(self, req, response):
-        data = self.bridge.get_all(int(req.params.get('srid')))
+        data = self.bridge.get_all(srid=int(req.params.get('srid')), geo_json=)
         response.body = data
         
     def rect(self, req, response):
