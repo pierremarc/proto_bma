@@ -140,7 +140,13 @@ function InitMap()
             }
         });
         
-        BG.install_features();
+        BG.install_features('map', {
+            click:function(evt){
+                
+                console.log(this.pid + " got clicked");
+                $('.console_item').removeClass('clicked-feature');
+                $('#console_item_'+this.pid).addClass('clicked-feature');
+        }});
     });
 
                 
