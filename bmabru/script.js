@@ -1,4 +1,4 @@
-//
+//test
 function InitDebug () {
 	$('body').prepend('<div id="debug"></div>');
 }
