@@ -91,7 +91,17 @@ div.console_item{
 /*     border:1px solid red; */
     font-size:8pt;
     padding-left:10%;
+    
+    &.feature-visible{
+        font-weight:bold;
+        z-index:20;
+    }
+    &.feature-hidden{
+        color:#aaa;
+        z-index:10;
+    }
 }
+
 
 /************************
  *  Zoom control

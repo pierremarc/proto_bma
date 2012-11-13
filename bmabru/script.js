@@ -75,75 +75,72 @@ function InitMap()
     var bmabru_json_url = 'http://www.bmabru.be/Public/json/';
     BG.init(WMS_URL, PG_URL, WMS_LAYER, MAP_TITLE);
     
+    // Put everything in place _once_ we get the data
     BG.get_all(function(all_data){
         
         var cnsl = $('#console'),
                all_elem = new Object();
         for(var i=0; i < all_data.length; i++)
         {
-            var elem = $('<div id="console_item_'+all_data[i].pid+'" />');
-            elem.addClass('console_item');
-            elem.html(all_data[i].name);
-            elem.hide();
-            elem.css({top:'0px'});
-            cnsl.append(elem);
-            all_elem[all_data[i].pid] = {elem:elem, data:all_data[i]};
+            if(all_data[i].pid && all_data[i].pid !== 'null')
+            {
+                var elem = $('<div id="console_item_'+all_data[i].pid+'" />');
+                elem.addClass('console_item');
+                elem.html(all_data[i].name);
+//                 elem.hide();
+                elem.css({top:'0px'});
+                cnsl.append(elem);
+                all_elem[all_data[i].pid] = {elem:elem, data:all_data[i]};
+            }
         }
         
-        function reset_console(data){
+        function reset_console(data, visible){
             var elem = data.data.all[data.data.pid];
             var elem_y = $('#map').offset().top + data.ctnr_point.y - cnsl.offset().top;
-            elem.elem.show();
+            if(visible)
+            {
+                elem.elem.removeClass('feature-hidden');
+                elem.elem.addClass('feature-visible');
+            }
+            else
+            {
+                elem.elem.removeClass('feature-visible');
+                elem.elem.addClass('feature-hidden');
+            }
             elem.elem.animate({top:elem_y + 'px'});
         };
         
        
         
         BG.install_map('map', function(data){
-            $('.console_item').hide();
+//             $('.console_item').hide();
+           
             for(var idx=0; idx < data.length ; idx++)
             {
                 var ftr_id = data[idx];
-//                 console.log('## '+idx + ' => ' + ftr_id);
-                if(ftr_id)
+                if(ftr_id && ftr_id !== 'null')
                 {
                     BG.get_pos(ftr_id, 'map', function(gdata){
-//                         console.log(idx + ' => ' + ftr_id);
-                        reset_console(gdata);
+                        reset_console(gdata, true);
                     }, 
                     {pid:ftr_id, all:all_elem}
                     );
                 }
             }
+            for(var k in all_elem)
+            {
+                if($.inArray(parseInt(k),data) < 0)
+                {
+                    BG.get_pos(k, 'map', function(gdata){
+                        reset_console(gdata, false);
+                    }, 
+                    {pid:k, all:all_elem}
+                    );
+                }
+            }
         });
     });
-//     $.getJSON('http://specgis.be:8001/all',{srid:4326},function(data){
-//         for(var dix = 0; dix < data.length; dix++)
-//         {
-//             var d = data[dix];
-//             var latlngs = new Array();
-//             var g = d.geom;
-//             g = g.slice('MULTIPOLYGON((('.length, -3);
-//             var dg = g.split(',');
-//             for(var gix = 0; gix < dg.length; gix += 1)
-//             {
-//                 var ll = dg[gix].split(' ')
-//                 if(ll[0] && ll[1])
-//                 {
-// //                     var latlon=Conv.m2ll(ll[1], ll[0]);//output latlon.lat, latlon.lon
-// //                     if(latlon.lat && latlon.lon)
-//                     latlngs.push(new L.LatLng(ll[1], ll[0]))
-//                 }
-//             }
-//             console.log(latlngs);
-//             L.polyline(latlngs, {color: 'green'}).addTo(BG.get_map());
-//             }
-//         });
-                
-//                 var pos = $('#pos');
-//                 BG.get_map().on('mousemove', function(evt){
-//                     pos.html('lat: '+evt.latlng.lat+'<br /> lng: '+evt.latlng.lng); 
-//                 });
+
                 
 }
 
