@@ -81,10 +81,12 @@ function InitMap()
             $.getJSON('http://www.bmabru.be/Public/json/Builders.php', function( builders_data ){
                 
                 var projects = new Object();
+                var fake_text = '<p>Le projet consiste en la construction d’un complexe d’équipements d’intérêt public au coeur du quartier Primeurs-Pont de Luttre à Forest. Les deux terrains sur lesquels ces équipements seront construits sont situés avenue du Pont de Luttre : soit un terrain triangulaire ceint pas les voies de chemin de fer sur deux de ses côtés et une petite parcelle sise de l’autre côté de l’avenue du Pont de Luttre. Le programme intègre la nécessité de traiter ce lieu comme entrée de ville.</p>';
+                var fake_desc = '<div class="short-description"><div class="description-title">Bla bla</div><div class="description-wrapper">'+fake_text+'</div></div>';
                 for(var pidx in projects_data)
                 {
                     var builders = projects_data[pidx].b;
-                    var content = '<div class="project-description">';
+                    var content = '<div class="builders">';
                     for(var bidx = 0; bidx < builders.length; bidx++)
                     {
                         var bid = builders[bidx];
@@ -92,7 +94,7 @@ function InitMap()
                     }
                     content += '</div>';
                     
-                    projects[pidx] = {name:projects_data[pidx].t, content:content};
+                    projects[pidx] = {name:projects_data[pidx].t, content:fake_desc, builders:content};
                 }
                 var cnsl = $('#console'),
                     all_elem = new Object();
@@ -102,7 +104,8 @@ function InitMap()
                     {
                         var elem = $('<div id="console_item_'+all_data[i].pid+'" />');
                         elem.addClass('console_item');
-                        elem.html(all_data[i].name);
+//                         elem.html(all_data[i].name);
+                        elem.html(projects[all_data[i].pid].builders + '<div class="item-project-name">'+projects[all_data[i].pid].name+'</div>');
         //                 elem.hide();
                         elem.css({top:'0px'});
                         cnsl.append(elem);
@@ -165,13 +168,16 @@ function InitMap()
                 };
                 BG.install_features('map', {
                     click:function(evt){
-                        $('.console_item').removeClass('clicked-feature');
-                        $('#console_item_'+this.pid).addClass('clicked-feature');
+                        
                         
                         // more serious stuff
                         var ctnt = $('#content');
                         ctnt.html(projects[this.pid].content);
                         ctnt.show();
+                    },
+                    mouseover:function(evt){
+                        $('.console_item').removeClass('clicked-feature');
+                        $('#console_item_'+this.pid).addClass('clicked-feature');
                     }
                 },feature_options);
             });
@@ -190,10 +196,11 @@ function WindowResize () {
 	bW = wW()-horMargins;
 	container.css({'height':cH});
 	body.css({'width':bW});
-	lastli = bW-navMinWidth+10;
-	if (lastli < 10) {
-		lastli = 10;
-	};
+    $('#map-wrapper').css({'width':bW - consoleWidth});
+// 	lastli = bW-navMinWidth+10;
+// 	if (lastli < 10) {
+// 		lastli = 10;
+// 	};
 // 	$('#navigation>ul>li:last()').css('padding-left',lastli);
 // 	if ( cons.is(':visible') ) {
 // 		map.css({'width':bW-consoleWidth});

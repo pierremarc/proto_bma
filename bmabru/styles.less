@@ -1,5 +1,5 @@
 /* debug */
-#map{background:blue;}
+#map{background:white;}
 #debug{position:fixed; top:0; left:0; background:#ccc; width:200px; font-size:6px; }
 /* #console{background:yellow;} */
 /* vars */
@@ -91,6 +91,24 @@ body{margin:0 10px 10px; width:100%; height:100%;}
 
 #content{
     background-color:white;
+    padding:6px 0 0 6px;
+    .short-description{
+        padding:6px;
+        background-color:@yellow;
+        
+        .description-title{
+            display:inline-block;
+            background-color:black;
+            color:@yellow;
+        }
+        .description-wrapper{
+            
+            
+            p{
+                
+            }
+        }
+    }
 }
 
 div.console_item{
@@ -101,13 +119,25 @@ div.console_item{
     font-size:8pt;
     padding-left:10%;
     
+    .item-project-name{
+        display:none;
+    }
+    
+    .builder{
+        
+        a{
+            
+        }
+    }
+    
     &.feature-visible{
         font-weight:bold;
         z-index:20;
     }
     &.feature-hidden{
-        color:#aaa;
-        z-index:10;
+        display:none;
+/*        color:#aaa;
+        z-index:10;*/
     }
     &.clicked-feature{
         color:@hred;
@@ -115,8 +145,13 @@ div.console_item{
         font-size:10pt;
         background-color:white;
         padding: 0 10% 10% 10%;
+        
+        .item-project-name{
+            display:block;
+        }
     }
 }
+
 
 
 /************************
