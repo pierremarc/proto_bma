@@ -222,7 +222,7 @@ function InitMap()
                 var feature_options = {
                     stroke:true,
                     color: '#d43b2d',
-                    weight:3,
+                    weight:1,
                     opacity:1,
                     fill:true,
                     fillColor: '#d43b2d',
