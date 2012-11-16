@@ -1,3 +1,13 @@
+/*
+font-family:'NotCourierSans';
+font-family:'NotCourierSans-Bold';
+font-family:'Futura-Bold';
+font-family:'PLRU-UltraLight';
+font-family:'PLRR-Regular';
+font-family:'PLRB-SemiBold';
+font-family:'OSP_helvetica_serif';
+*/
+		
 /* debug */
 #map{background:white;}
 #debug{position:fixed; top:0; left:0; background:#ccc; width:200px; font-size:6px; }
@@ -100,12 +110,23 @@ body{margin:0 10px 10px; width:100%; height:100%;}
             display:inline-block;
             background-color:black;
             color:@yellow;
+	    font-size:11pt;
+	    font-family:'Futura-Bold';  
+	    text-transform:uppercase;
+	    padding:6px 6px 0px 6px;
+	    letter-spacing:2px;
         }
         .description-wrapper{
             
             
             p{
-                
+		    text-decoration:none;
+		    font-weight: 300;
+		    color:black;
+		    font-size:7pt;
+		    font-family:'Futura-Bold';    
+		    padding:10px 0 0 0;
+		    
             }
         }
     }
@@ -125,19 +146,25 @@ div.console_item{
     
     .builder{
 	    text-decoration:none;
+	    font-weight: 300;
 	    color:black;
-	    font-size:10pt;
+	    font-size:13pt;
+	    font-family:'PLRB-SemiBold';
+	    line-height:70%;
 /*	    background-color:white;*/
 /*	    padding: 0 10% 10% 10%;*/
         a{
 		text-decoration:none;
+		font-weight: 300;
 		color:black;
-		font-size:10pt;
+		font-size:13pt;
+		font-family:'PLRR-Regular';
+		line-height:70%;
         }
     }
     
     &.feature-visible{
-        font-weight:bold;
+/*        font-weight:bold;*/
         z-index:20;
     }
     &.feature-hidden{
@@ -146,11 +173,11 @@ div.console_item{
         z-index:10;*/
     }
     &.clicked-feature{
-        color:@hred;
+/*        color:@hred;*/
         z-index:30;
         font-size:10pt;
         background-color:white;
-        padding: 0 10% 10% 10%;
+        padding: 10px 10px 5px 10px;
         
         .item-project-name{
             display:block;
