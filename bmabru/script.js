@@ -73,6 +73,16 @@ function InitMap()
     var PG_URL = 'http://specgis.be:8001/';
     var MAP_TITLE = 'Map Title';
     var bmabru_json_url = 'http://www.bmabru.be/Public/json/';
+    
+    var Icon0 = L.icon({
+        iconUrl: 'images/build1.png',
+        iconSize: [386 / 4, 370 / 4],
+    });
+    var Icon1 = L.icon({
+        iconUrl: 'images/build1red.png',
+        iconSize: [386 / 4, 370 / 4],
+    });
+    
     BG.init(WMS_URL, PG_URL, WMS_LAYER, MAP_TITLE);
     
     // Put everything in place _once_ we get the very all data
@@ -83,6 +93,9 @@ function InitMap()
                 var projects = new Object();
                 var fake_text = '<p>Le projet consiste en la construction d’un complexe d’équipements d’intérêt public au coeur du quartier Primeurs-Pont de Luttre à Forest. Les deux terrains sur lesquels ces équipements seront construits sont situés avenue du Pont de Luttre : soit un terrain triangulaire ceint pas les voies de chemin de fer sur deux de ses côtés et une petite parcelle sise de l’autre côté de l’avenue du Pont de Luttre. Le programme intègre la nécessité de traiter ce lieu comme entrée de ville.</p>';
                 var fake_desc = '<div class="short-description"><div class="description-title">Bla bla</div><div class="description-wrapper">'+fake_text+'</div></div>';
+                
+                var images = new Object();
+                
                 for(var pidx in projects_data)
                 {
                     var builders = projects_data[pidx].b;
@@ -110,6 +123,25 @@ function InitMap()
                         elem.css({top:'0px'});
                         cnsl.append(elem);
                         all_elem[all_data[i].pid] = {elem:elem, data:all_data[i]};
+                        
+                        
+                        // position images
+                        var icon_0 = true;
+                        BG.get_pos(all_data[i].pid, 'map', function(gdata){
+                            var coords = gdata.coordinates;
+                            if(icon_0)
+                            {
+                                images[gdata.data.pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon0, clickable:false});
+                                icon_0 = false;
+                            }
+                            else
+                            {
+                                images[gdata.data.pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon1, clickable:false});
+                                icon_0 = true;
+                            }
+                        }, 
+                        {pid:all_data[i].pid, imgs:images}
+                        );
                     }
                 }
                 
@@ -132,6 +164,11 @@ function InitMap()
             
                 
                 BG.install_map('map', function(data){
+                    var map = BG.get_map('map');
+                    for(k in images)
+                    {
+                        map.removeLayer(images[k]);
+                    }
                     for(var idx=0; idx < data.length ; idx++)
                     {
                         var ftr_id = data[idx];
@@ -155,15 +192,23 @@ function InitMap()
                             );
                         }
                     }
+                    var zoom = map.getZoom();
+                    if(zoom > 15)
+                    {
+                        for(k in images)
+                        {
+                            map.addLayer(images[k]);
+                        }
+                    }
                 });
                 var feature_options = {
-                    stroke:false,
-                    color: '#f00',
-                    weight:2,
+                    stroke:true,
+                    color: '#d43b2d',
+                    weight:3,
                     opacity:1,
                     fill:true,
-                    fillColor: '#fff',
-                    fillOpacity:0.1,
+                    fillColor: '#d43b2d',
+                    fillOpacity:0.5,
                     clickable:true
                 };
                 BG.install_features('map', {
