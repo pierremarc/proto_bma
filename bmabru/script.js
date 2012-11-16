@@ -195,10 +195,15 @@ function InitMap()
                     var zoom = map.getZoom();
                     if(zoom > 15)
                     {
+                        BG.hide_features();
                         for(k in images)
                         {
                             map.addLayer(images[k]);
                         }
+                    }
+                    else
+                    {
+                        BG.show_features('map');
                     }
                 });
                 var feature_options = {
@@ -213,9 +218,6 @@ function InitMap()
                 };
                 BG.install_features('map', {
                     click:function(evt){
-                        
-                        
-                        // more serious stuff
                         var ctnt = $('#content');
                         ctnt.html(projects[this.pid].content);
                         ctnt.show();
@@ -223,6 +225,9 @@ function InitMap()
                     mouseover:function(evt){
                         $('.console_item').removeClass('clicked-feature');
                         $('#console_item_'+this.pid).addClass('clicked-feature');
+                    },
+                    mouseout:function(evt){
+                        $('.console_item').removeClass('clicked-feature');
                     }
                 },feature_options);
             });
