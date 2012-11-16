@@ -129,16 +129,29 @@ function InitMap()
                         var icon_0 = true;
                         BG.get_pos(all_data[i].pid, 'map', function(gdata){
                             var coords = gdata.coordinates;
+                            var pid = gdata.data.pid;
                             if(icon_0)
                             {
-                                images[gdata.data.pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon0, clickable:false});
+                                images[pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon0, clickable:true});
                                 icon_0 = false;
                             }
                             else
                             {
-                                images[gdata.data.pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon1, clickable:false});
+                                images[pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon1, clickable:true});
                                 icon_0 = true;
                             }
+                            images[pid].on( 'click', function(evt){
+                                var ctnt = $('#content');
+                                ctnt.html(projects[pid].content);
+                                ctnt.show();
+                            });
+                            images[pid].on( 'mouseover', function(evt){
+                                $('.console_item').removeClass('clicked-feature');
+                                $('#console_item_'+pid).addClass('clicked-feature');
+                            });
+                            images[pid].on( 'mouseout', function(evt){
+                          $('.console_item').removeClass('clicked-feature');
+                      });
                         }, 
                         {pid:all_data[i].pid, imgs:images}
                         );
