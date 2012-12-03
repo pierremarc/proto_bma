@@ -92,9 +92,10 @@ function InitMap()
                 
                 var projects = new Object();
                 var fake_text = '<p>Le projet consiste en la construction d’un complexe d’équipements d’intérêt public au coeur du quartier Primeurs-Pont de Luttre à Forest. Les deux terrains sur lesquels ces équipements seront construits sont situés avenue du Pont de Luttre : soit un terrain triangulaire ceint pas les voies de chemin de fer sur deux de ses côtés et une petite parcelle sise de l’autre côté de l’avenue du Pont de Luttre. Le programme intègre la nécessité de traiter ce lieu comme entrée de ville.</p>';
-                var fake_desc = '<div class="short-description"><div class="description-title">Bla bla</div><div class="description-wrapper">'+fake_text+'</div></div>';
+                var fake_desc = '<div class="short-description"><div class="description-title">###TITLE###</div><div class="description-wrapper">'+fake_text+'</div></div>';
                 
                 var images = new Object();
+                var images_f = new Object();
                 
                 for(var pidx in projects_data)
                 {
@@ -107,18 +108,21 @@ function InitMap()
                     }
                     content += '</div>';
                     
-                    projects[pidx] = {name:projects_data[pidx].t, content:fake_desc, builders:content};
+                    projects[pidx] = {name:projects_data[pidx].t, content:fake_desc.replace('###TITLE###', projects_data[pidx].t), builders:content};
                 }
                 var cnsl = $('#console'),
                     all_elem = new Object();
                 for(var i=0; i < all_data.length; i++)
                 {
-                    if(all_data[i].pid && all_data[i].pid !== 'null')
+                    if(all_data[i].pid && all_data[i].pid !== 'null' &&  projects[all_data[i].pid] !== undefined)
                     {
                         var elem = $('<div id="console_item_'+all_data[i].pid+'" />');
                         elem.addClass('console_item');
 //                         elem.html(all_data[i].name);
-                        elem.html(projects[all_data[i].pid].builders + '<div class="item-project-name">'+projects[all_data[i].pid].name+'</div>');
+                        var padip = projects[all_data[i].pid];
+                        
+                        console.log(padip);
+                        elem.html(padip.builders + '<div class="item-project-name">'+padip.name+'</div>');
         //                 elem.hide();
                         elem.css({top:'0px'});
                         cnsl.append(elem);
@@ -126,30 +130,33 @@ function InitMap()
                         
                         
                         // position images
-                        var icon_0 = true;
+                        var icon_0 = 0;
                         BG.get_pos(all_data[i].pid, 'map', function(gdata){
                             var coords = gdata.coordinates;
                             var pid = gdata.data.pid;
-                            if(icon_0)
+                            var cur_img = undefined;
+                            if(icon_0 < 12)
                             {
                                 images[pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon0, clickable:true});
-                                icon_0 = false;
+                                cur_img = images[pid];
+                                icon_0 += 1;
                             }
                             else
                             {
-                                images[pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon1, clickable:true});
-                                icon_0 = true;
+                                images_f[pid] = new L.Marker(new L.LatLng(coords[1], coords[0]), {icon:Icon1, clickable:true});
+                                cur_img = images_f[pid];
+                                icon_0 = 0;
                             }
-                            images[pid].on( 'click', function(evt){
+                            cur_img.on( 'click', function(evt){
                                 var ctnt = $('#content');
                                 ctnt.html(projects[pid].content);
                                 ctnt.show();
                             });
-                            images[pid].on( 'mouseover', function(evt){
+                            cur_img.on( 'mouseover', function(evt){
                                 $('.console_item').removeClass('clicked-feature');
                                 $('#console_item_'+pid).addClass('clicked-feature');
                             });
-                            images[pid].on( 'mouseout', function(evt){
+                            cur_img.on( 'mouseout', function(evt){
                           $('.console_item').removeClass('clicked-feature');
                       });
                         }, 
@@ -182,6 +189,10 @@ function InitMap()
                     {
                         map.removeLayer(images[k]);
                     }
+                    for(k in images_f)
+                    {
+                        map.removeLayer(images_f[k]);
+                    }
                     for(var idx=0; idx < data.length ; idx++)
                     {
                         var ftr_id = data[idx];
@@ -206,12 +217,23 @@ function InitMap()
                         }
                     }
                     var zoom = map.getZoom();
-                    if(zoom > 15)
+                    if(zoom >= 12 && zoom <=15)
+                    {
+                        for(k in images_f)
+                        {
+                            map.addLayer(images_f[k]);
+                        }
+                    }
+                    else if(zoom > 15)
                     {
                         BG.hide_features();
                         for(k in images)
                         {
                             map.addLayer(images[k]);
+                        }
+                        for(k in images_f)
+                        {
+                            map.addLayer(images_f[k]);
                         }
                     }
                     else
